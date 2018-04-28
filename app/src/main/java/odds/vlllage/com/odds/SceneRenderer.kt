@@ -12,18 +12,23 @@ class SceneRenderer : GLSurfaceView.Renderer {
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
     private val rotationMatrix = FloatArray(16)
+    private val tempMatrix = FloatArray(16)
     private var program: Int = 0
 
     private lateinit var triangles: HashSet<Triangle>
 
     fun rotate(matrix: FloatArray) {
-        Matrix.setIdentityM(rotationMatrix, 0)
-//        SensorManager.remapCoordinateSystem(matrix, SensorManager.AXIS_Y,
-//                SensorManager.AXIS_MINUS_X, rotationMatrix)
-        Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, matrix, 0)
+        matrix.forEachIndexed { i, v -> rotationMatrix[i] = v }
+    }
+
+    fun move(xyz: FloatArray) {
+        Matrix.translateM(viewMatrix, 0, xyz[0] / 10, xyz[1] / 10, xyz[2] / 10);
     }
 
     override fun onDrawFrame(p0: GL10?) {
+        Matrix.multiplyMM(tempMatrix, 0, viewMatrix, 0, rotationMatrix, 0)
+        Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, tempMatrix, 0)
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         triangles.forEach { it.draw(program, mvpMatrix) }
     }
@@ -37,18 +42,19 @@ class SceneRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
 
-        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 1f, 0f)
+        Matrix.setIdentityM(rotationMatrix, 0)
+        Matrix.setIdentityM(viewMatrix, 0)
 
         triangles = HashSet()
 
-        for (i in 1..222) {
-            val x = (Math.random().toFloat() - .5f) * 25f
-            val y = (Math.random().toFloat() - .5f) * 25f
-            val z = (Math.random().toFloat() - .5f) * 25f
+        for (i in 1..123) {
+            val x = (i%10-5) * 10f
+            val y = (i/10-5) * 10f
+            val z = -6f
             val triangleCoords = floatArrayOf(
-                    x, y + .5f, z,
-                    x - 0.5f, y - .5f, z - 0.125f,
-                    x + 0.5f, y - .5f, z - 0.125f
+                    x, y, z + 50f + 10f * Math.random().toFloat(),
+                    x - 1f, y , z,
+                    x + 1f, y, z
             )
             triangles.add(Triangle(triangleCoords))
         }

@@ -36,11 +36,18 @@ class MainActivity : MADGestureActivity() {
 
         sensorCallback = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent?) {
-                val matrix = FloatArray(16)
-                Matrix.setIdentityM(matrix, 0)
-                SensorManager.getRotationMatrixFromVector(matrix, event!!.values)
-                renderer.rotate(matrix)
-                glView.requestRender()
+                when (event!!.sensor.type) {
+                    Sensor.TYPE_ROTATION_VECTOR -> {
+                        val matrix = FloatArray(16)
+                        Matrix.setIdentityM(matrix, 0)
+                        SensorManager.getRotationMatrixFromVector(matrix, event.values)
+                        renderer.rotate(matrix)
+                        glView.requestRender()
+                    }
+                    Sensor.TYPE_LINEAR_ACCELERATION -> {
+                        renderer.move(event.values)
+                    }
+                }
             }
 
             override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
@@ -60,6 +67,11 @@ class MainActivity : MADGestureActivity() {
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 48,
                 SensorManager.SENSOR_DELAY_GAME)
+
+//        sensorManager.registerListener(sensorCallback,
+//                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+//                48,
+//                SensorManager.SENSOR_DELAY_GAME)
     }
 
     override fun onStop() {
