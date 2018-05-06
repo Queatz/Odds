@@ -66,7 +66,7 @@ class MainActivity : MADGestureActivity() {
         sensorManager.registerListener(sensorCallback,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 48,
-                SensorManager.SENSOR_DELAY_GAME)
+                SensorManager.SENSOR_DELAY_FASTEST)
 
 //        sensorManager.registerListener(sensorCallback,
 //                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),

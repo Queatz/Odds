@@ -3,6 +3,7 @@ package odds.vlllage.com.odds
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -47,14 +48,16 @@ class SceneRenderer : GLSurfaceView.Renderer {
 
         triangles = HashSet()
 
-        for (i in 1..123) {
-            val x = (i%10-5) * 10f
-            val y = (i/10-5) * 10f
-            val z = -6f
+        val random = Random(0)
+
+        for (i in 1..222) {
+            val x = (random.nextFloat() - .5f) * 25f
+            val y = (random.nextFloat() - .5f) * 25f
+            val z = (random.nextFloat() - .5f) * 25f
             val triangleCoords = floatArrayOf(
-                    x, y, z + 50f + 10f * Math.random().toFloat(),
-                    x - 1f, y , z,
-                    x + 1f, y, z
+                    x, y + .5f, z,
+                    x - 0.5f, y - .5f, z - 0.5f,
+                    x + 0.5f, y - .5f, z - 0.125f
             )
             triangles.add(Triangle(triangleCoords))
         }
