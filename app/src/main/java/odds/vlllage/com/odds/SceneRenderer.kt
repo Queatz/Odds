@@ -30,6 +30,7 @@ class SceneRenderer : GLSurfaceView.Renderer {
         Matrix.multiplyMM(tempMatrix, 0, viewMatrix, 0, rotationMatrix, 0)
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, tempMatrix, 0)
 
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         triangles.forEach { it.draw(program, mvpMatrix) }
     }
@@ -51,15 +52,11 @@ class SceneRenderer : GLSurfaceView.Renderer {
         val random = Random(0)
 
         for (i in 1..222) {
-            val x = (random.nextFloat() - .5f) * 25f
-            val y = (random.nextFloat() - .5f) * 25f
-            val z = (random.nextFloat() - .5f) * 25f
-            val triangleCoords = floatArrayOf(
-                    x, y + .5f, z,
-                    x - 0.5f, y - .5f, z - 0.5f,
-                    x + 0.5f, y - .5f, z - 0.125f
-            )
-            triangles.add(Triangle(triangleCoords))
+            val d = random.nextFloat() * 90 + 10
+            val x = Math.cos(i / 20.0).toFloat() * (d + 5)
+            val y = Math.sin(i / 20.0).toFloat() * (d+ 5)
+            val z = -1.8f
+            triangles.add(Triangle(floatArrayOf(x, y, z)))
         }
 
         val vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode)

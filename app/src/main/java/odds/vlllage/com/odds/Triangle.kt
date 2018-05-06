@@ -6,26 +6,46 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class Triangle(triangleCoords: FloatArray) {
+class Triangle(positionCoords: FloatArray) {
     private val vertexBuffer: FloatBuffer
     private var mPositionHandle: Int = 0
     private var mColorHandle: Int = 0
     private var mMVPMatrixHandle: Int = 0
     private val vertexCount = 9 / COORDS_PER_VERTEX
     private val vertexStride = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
+    private val position: FloatArray = positionCoords
 
     internal var color: FloatArray
 
     init {
-        val bb = ByteBuffer.allocateDirect(triangleCoords.size * 4)
+        val bb = ByteBuffer.allocateDirect(positionCoords.size * 3 * 4)
         bb.order(ByteOrder.nativeOrder())
         vertexBuffer = bb.asFloatBuffer()
-        vertexBuffer.put(triangleCoords)
-        vertexBuffer.position(0)
+        setPosition(positionCoords)
         color = floatArrayOf(Math.random().toFloat(), Math.random().toFloat(), Math.random().toFloat(), 0.0f)
     }
 
+    internal fun setPosition(position: FloatArray) {
+        position.forEachIndexed { index, value -> this.position[index] = value }
+
+        val x = position[0]
+        val y = position[1]
+        val z = position[2]
+        val triangleCoords = floatArrayOf(
+                x, y, z + 1.3f,
+                x - 0.5f, y, z,
+                x + 0.5f, y, z
+        )
+
+        vertexBuffer.put(triangleCoords)
+        vertexBuffer.position(0)
+    }
+
     fun draw(program: Int, mvpMatrix: FloatArray) {
+        if (Math.random() < 0.05) {
+            setPosition(floatArrayOf(position[0] * 0.99f, position[1] * 0.99f, position[2]))
+        }
+
         GLES20.glUseProgram(program)
         mPositionHandle = GLES20.glGetAttribLocation(program, "vPosition")
         GLES20.glEnableVertexAttribArray(mPositionHandle)
@@ -39,7 +59,7 @@ class Triangle(triangleCoords: FloatArray) {
         checkGlError("glGetUniformLocation")
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
         checkGlError("glUniformMatrix4fv")
-        GLES20.glDrawArrays(GLES20.GL_LINE_LOOP, 0, vertexCount)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
         GLES20.glDisableVertexAttribArray(mPositionHandle)
     }
 
