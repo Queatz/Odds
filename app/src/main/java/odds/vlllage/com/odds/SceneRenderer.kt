@@ -23,7 +23,7 @@ class SceneRenderer : GLSurfaceView.Renderer {
     }
 
     fun move(xyz: FloatArray) {
-        Matrix.translateM(viewMatrix, 0, xyz[0] / 10, xyz[1] / 10, xyz[2] / 10);
+        Matrix.translateM(viewMatrix, 0, xyz[0] / 50, xyz[1] / 50, xyz[2] / 50);
     }
 
     override fun onDrawFrame(p0: GL10?) {

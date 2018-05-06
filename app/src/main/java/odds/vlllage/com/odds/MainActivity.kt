@@ -56,17 +56,13 @@ class MainActivity : MADGestureActivity() {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
     }
 
-    private fun mod(a: Double, b: Double): Double {
-        return (a % b + b) % b;
-    }
-
     override fun onStart() {
         super.onStart()
 
         sensorManager.registerListener(sensorCallback,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 48,
-                SensorManager.SENSOR_DELAY_FASTEST)
+                SensorManager.SENSOR_DELAY_GAME)
 
 //        sensorManager.registerListener(sensorCallback,
 //                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),

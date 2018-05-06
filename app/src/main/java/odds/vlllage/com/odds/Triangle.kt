@@ -14,7 +14,7 @@ class Triangle(triangleCoords: FloatArray) {
     private val vertexCount = 9 / COORDS_PER_VERTEX
     private val vertexStride = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
 
-    internal var color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 0.0f)
+    internal var color: FloatArray
 
     init {
         val bb = ByteBuffer.allocateDirect(triangleCoords.size * 4)
@@ -22,6 +22,7 @@ class Triangle(triangleCoords: FloatArray) {
         vertexBuffer = bb.asFloatBuffer()
         vertexBuffer.put(triangleCoords)
         vertexBuffer.position(0)
+        color = floatArrayOf(Math.random().toFloat(), Math.random().toFloat(), Math.random().toFloat(), 0.0f)
     }
 
     fun draw(program: Int, mvpMatrix: FloatArray) {
