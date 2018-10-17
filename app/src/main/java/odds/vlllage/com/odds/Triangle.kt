@@ -8,17 +8,17 @@ import java.nio.FloatBuffer
 
 class Triangle(positionCoords: FloatArray) {
     private val vertexBuffer: FloatBuffer
-    private var mPositionHandle: Int = 0
-    private var mColorHandle: Int = 0
-    private var mMVPMatrixHandle: Int = 0
-    private val vertexCount = 9 / COORDS_PER_VERTEX
+    private var mPositionHandle = 0
+    private var mColorHandle = 0
+    private var mMVPMatrixHandle = 0
+    private val vertexCount = 3
     private val vertexStride = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
     private val position: FloatArray = positionCoords
 
     internal var color: FloatArray
 
     init {
-        val bb = ByteBuffer.allocateDirect(positionCoords.size * 3 * 4)
+        val bb = ByteBuffer.allocateDirect(positionCoords.size * vertexStride)
         bb.order(ByteOrder.nativeOrder())
         vertexBuffer = bb.asFloatBuffer()
         setPosition(positionCoords)
@@ -32,7 +32,7 @@ class Triangle(positionCoords: FloatArray) {
         val y = position[1]
         val z = position[2]
         val triangleCoords = floatArrayOf(
-                x, y, z + 1.3f,
+                x, y + 6.3f, z,
                 x - 0.5f, y, z,
                 x + 0.5f, y, z
         )
