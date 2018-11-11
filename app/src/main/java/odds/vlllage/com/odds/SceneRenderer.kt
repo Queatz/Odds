@@ -7,10 +7,14 @@ import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
+enum class Device(val fov: Float) {
+    X5(8f),
+    VADER(45f/1.7f)
+}
 
 class SceneRenderer : GLSurfaceView.Renderer {
     companion object {
-        val FOV = 8f
+        val FOVY = Device.VADER.fov
     }
 
     private val mvpMatrix = FloatArray(16)
@@ -42,7 +46,7 @@ class SceneRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceChanged(p0: GL10?, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
         val aspectRatio = width.toFloat() / height.toFloat()
-        Matrix.perspectiveM(projectionMatrix, 0, FOV, aspectRatio, 1f, 100f)
+        Matrix.perspectiveM(projectionMatrix, 0, FOVY, aspectRatio, 1f, 100f)
     }
 
     override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {

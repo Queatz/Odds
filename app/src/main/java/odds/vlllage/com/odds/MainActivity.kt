@@ -1,5 +1,6 @@
 package odds.vlllage.com.odds
 
+import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -61,8 +62,8 @@ class MainActivity : MADGestureActivity() {
 
         sensorManager.registerListener(sensorCallback,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                48,
-                SensorManager.SENSOR_DELAY_GAME)
+                64,
+                SensorManager.SENSOR_DELAY_FASTEST)
 
 //        sensorManager.registerListener(sensorCallback,
 //                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
